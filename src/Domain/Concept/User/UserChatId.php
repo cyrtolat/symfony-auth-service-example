@@ -9,14 +9,14 @@ final readonly class UserChatId extends AbstractId
 {
     public function __construct(public string $value)
     {
-        if (self::isUuid($this->value) === false) {
+        if (self::isTelegramId($this->value) === false) {
             throw new InvalidArgumentException(
                 "Invalid chat ID format: $value"
             );
         }
     }
 
-    private static function isUuid(string $value): bool
+    private static function isTelegramId(string $value): bool
     {
         return preg_match('/^-?\d{5,15}$/', $value);
     }
