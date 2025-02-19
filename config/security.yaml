@@ -1,0 +1,15 @@
+parameters:
+    # access token options
+    security.jwt.access_token.secret_key: '%env(APP_SECRET)%'
+    security.jwt.access_token.lifetime: 3600
+    security.jwt.access_token.algorithm: HS256
+
+    # refresh token options
+    security.jwt.refresh_token.secret_key: '%env(APP_REFRESH)%'
+    security.jwt.refresh_token.lifetime: 7200
+    security.jwt.refresh_token.algorithm: HS256
+
+    # telegram auth options
+    security.telegram.bot_token: '%env(TELEGRAM_BOT_TOKEN)%'
+    security.telegram.algorithm: SHA256
+    security.telegram.special_key: WebAppData

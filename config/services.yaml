@@ -1,0 +1,44 @@
+imports:
+    - { resource: './security.yaml' }
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude: '../src/Kernel.php'
+
+    App\Infrastructure\Support\ExceptionHandler:
+        tags:
+            - kernel.event_listener
+
+    _instanceof:
+        App\Application\Abstract\AbstractCommandHandler:
+            tags:
+                - { name: messenger.message_handler }
+
+    redis:
+        class: App\Infrastructure\Support\RedisStorage
+        arguments:
+            $host: '%env(REDIS_HOST)%'
+            $port: '%env(REDIS_PORT)%'
+            $pass: '%env(REDIS_PASS)%'
+            $salt: '%env(APP_SECRET)%'
+
+    App\Infrastructure\Service\TelegramAuthService:
+        arguments:
+            $botToken: '%security.telegram.bot_token%'
+            $algorithm: '%security.telegram.algorithm%'
+            $specialKey: '%security.telegram.special_key%'
+
+    App\Infrastructure\Service\JsonWebTokenService:
+        arguments:
+            $accessTokenSecretKey: '%security.jwt.access_token.secret_key%'
+            $accessTokenAlgorithm: '%security.jwt.access_token.algorithm%'
+            $accessTokenLifetime: '%security.jwt.access_token.lifetime%'
+            $refreshTokenSecretKey: '%security.jwt.refresh_token.secret_key%'
+            $refreshTokenAlgorithm: '%security.jwt.refresh_token.algorithm%'
+            $refreshTokenLifetime: '%security.jwt.refresh_token.lifetime%'
+            $redisStorage: '@redis'
